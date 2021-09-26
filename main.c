@@ -17,6 +17,7 @@ void incluirCliente(Cliente *pcliente, int * clientes_cadastrados);
 void listarClientes(Cliente *pcliente, int clientes_cadastrados);
 void removerCliente(Cliente *pcliente, int *clientes_cadastrados);
 void zerarMontantes(Cliente *pcliente, int clientes_cadastrados);
+void listarMelhorComprador(Cliente *pcliente, int clientes_cadastrados);
 
 int main() {
   Cliente *pcliente;
@@ -42,12 +43,39 @@ int main() {
       case 4:
         zerarMontantes(pcliente, clientes_cadastrados);
         break;
+      case 5:
+        listarMelhorComprador(pcliente, clientes_cadastrados);
+        break;
     }
   } while(opt != 7);
 
   free(pcliente);
   pcliente = NULL;
   return 0;
+}
+
+void listarMelhorComprador(Cliente *pcliente, int clientes_cadastrados) {
+  if (!clientes_cadastrados) {
+    printf("Não há clientes cadastrados para identificar o melhor comprador!\n");
+    sleep(2);
+  }
+  else {
+    int pos_melhor_comprador = 0;
+    for (int i = 0; i < clientes_cadastrados - 1; i++) {
+      if (pcliente[pos_melhor_comprador].gastos < pcliente[i+1].gastos) {
+        pos_melhor_comprador = i + 1;
+      }
+    }
+    printf("Melhor comprador\n");
+    printf("================================\n");
+    printf("Nome: %s\n", pcliente[pos_melhor_comprador].nome);
+    printf("Ano Nascimento: %i\n", pcliente[pos_melhor_comprador].ano_nasc);
+    printf("Gastos: %.2f\n", pcliente[pos_melhor_comprador].gastos);
+
+    sleep(4);
+  }
+
+  system("clear");  
 }
 
 void zerarMontantes(Cliente *pcliente, int clientes_cadastrados) {
@@ -69,13 +97,12 @@ void zerarMontantes(Cliente *pcliente, int clientes_cadastrados) {
 
     printf("Limpeza realizada com sucesso!\n");
   }
+
   sleep(2);
   system("clear");
 
 
 }
-
-
 
 void removerCliente(Cliente *pcliente, int *clientes_cadastrados) {
 
