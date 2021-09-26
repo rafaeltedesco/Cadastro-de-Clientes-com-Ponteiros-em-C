@@ -18,6 +18,7 @@ void listarClientes(Cliente *pcliente, int clientes_cadastrados);
 void removerCliente(Cliente *pcliente, int *clientes_cadastrados);
 void zerarMontantes(Cliente *pcliente, int clientes_cadastrados);
 void listarMelhorComprador(Cliente *pcliente, int clientes_cadastrados);
+void exibirMontantePorCliente(Cliente *pcliente, int clientes_cadastrados);
 
 int main() {
   Cliente *pcliente;
@@ -46,12 +47,43 @@ int main() {
       case 5:
         listarMelhorComprador(pcliente, clientes_cadastrados);
         break;
+      case 6:
+        exibirMontantePorCliente(pcliente, clientes_cadastrados);
     }
   } while(opt != 7);
 
   free(pcliente);
   pcliente = NULL;
   return 0;
+}
+
+void exibirMontantePorCliente(Cliente *pcliente, int clientes_cadastrados) {
+
+  if (!clientes_cadastrados) {
+    printf("Não há clientes cadastrados para exibir o montante\n");
+    sleep(2);
+  }
+  else {
+    char nome[30];
+    bool found = false;
+    printf("Digite o nome do cliente para visualizar o montante gasto: ");
+    scanf("%s", nome);
+
+    for (int i = 0; i < clientes_cadastrados; i++) {
+
+      if (!strcmp(pcliente[i].nome, nome)) {
+        printf("Montante gasto do cliente %s : %.2f\n", pcliente[i].nome, pcliente[i].gastos);
+        found = true;
+      }
+    }
+
+    if (!found) {
+      printf("Não foi possível localizar o cliente %s\n", nome);
+    }
+
+    sleep(4);
+  }
+  system("clear");
 }
 
 void listarMelhorComprador(Cliente *pcliente, int clientes_cadastrados) {
