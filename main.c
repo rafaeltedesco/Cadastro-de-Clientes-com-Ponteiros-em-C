@@ -25,6 +25,7 @@ int main() {
   pcliente = (Cliente *)malloc(sizeof(Cliente) * BLOCK_CLIENTE);
   int clientes_cadastrados = 0;
   int opt;
+  int curr_blocks = 1;
 
   do {
 
@@ -33,6 +34,25 @@ int main() {
     switch(opt) {
 
       case 1:
+    
+        if ((clientes_cadastrados % BLOCK_CLIENTE == 0) && (clientes_cadastrados != 0))
+        {
+          printf("Capacidade de clientes atingida! Alocando novo espaço de memória para mais %i clientes\n", BLOCK_CLIENTE);
+          curr_blocks++;
+          printf("%i curr blocks\n%i BLOCK CLIENTE\n", curr_blocks, BLOCK_CLIENTE);
+          Cliente *pclientenovo = (Cliente *)realloc(pcliente,curr_blocks * sizeof(Cliente) * BLOCK_CLIENTE);
+          if (pclientenovo == NULL) {
+            printf("Erro na alocação de memória!\nEncerrando programa\n");
+            free(pcliente);
+            exit(1);
+          }
+          printf("Novo bloco de memória alocado com sucesso!\n");
+        
+          pcliente = pclientenovo;
+
+          sleep(3);
+          system("clear");
+        }
         incluirCliente(pcliente, &clientes_cadastrados);
         break;
       case 2:
@@ -52,7 +72,6 @@ int main() {
     }
   } while(opt != 7);
 
-  free(pcliente);
   pcliente = NULL;
   return 0;
 }
@@ -98,12 +117,16 @@ void listarMelhorComprador(Cliente *pcliente, int clientes_cadastrados) {
         pos_melhor_comprador = i + 1;
       }
     }
-    printf("Melhor comprador\n");
-    printf("================================\n");
-    printf("Nome: %s\n", pcliente[pos_melhor_comprador].nome);
-    printf("Ano Nascimento: %i\n", pcliente[pos_melhor_comprador].ano_nasc);
-    printf("Gastos: %.2f\n", pcliente[pos_melhor_comprador].gastos);
-
+    if (pcliente[pos_melhor_comprador].gastos != 0) {
+      printf("Melhor comprador\n");
+      printf("================================\n");
+      printf("Nome: %s\n", pcliente[pos_melhor_comprador].nome);
+      printf("Ano Nascimento: %i\n", pcliente[pos_melhor_comprador].ano_nasc);
+      printf("Gastos: %.2f\n", pcliente[pos_melhor_comprador].gastos);
+    }
+    else {
+      printf("Não há melhor comprador no momento!\n Clientes com montante gasto de 0");
+    }
     sleep(4);
   }
 
@@ -201,9 +224,12 @@ void incluirCliente(Cliente *pcliente, int * clientes_cadastrados) {
   printf("Digite os gastos do cliente desse mês: ");
   scanf("%f", &pcliente[*clientes_cadastrados].gastos);
   
+  printf("\nCliente %s, cadastrado com sucesso\n", pcliente[*clientes_cadastrados].nome);
   *clientes_cadastrados = *clientes_cadastrados + 1;
 
+  sleep(2);
   system("clear");
+  
 
 }
 
@@ -215,20 +241,14 @@ void listarClientes(Cliente *pcliente, int clientes_cadastrados) {
   }
   else {
     int i = 0;
-    Cliente *last_el = (pcliente + clientes_cadastrados - 1);
-    Cliente *first_el = pcliente;
-
-    while (pcliente <= last_el) {
+    for (; i < clientes_cadastrados; i++) {
       printf("Exibindo dados do %iº cliente\n", i + 1);
       printf("============================================\n");
-      printf("Nome: %s\n", pcliente->nome);
-      printf("Ano Nascimento: %d\n", pcliente->ano_nasc);
-      printf("Gastos: %.2f\n", pcliente->gastos);
+      printf("Nome: %s\n", pcliente[i].nome);
+      printf("Ano Nascimento: %d\n", pcliente[i].ano_nasc);
+      printf("Gastos: %.2f\n", pcliente[i].gastos);
       printf("\n\n");
-      pcliente++;
     }
-    pcliente = first_el;
-
     sleep(3);
   }
 
