@@ -1,3 +1,10 @@
+/*
+  Autor: Rafael Tedesco
+  Data: 26/09/2021
+
+*/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
